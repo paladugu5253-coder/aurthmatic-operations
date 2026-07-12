@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="962c8c0b-9ae5-4bd5-b42d-467192407c36" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="6a8d305d-f61e-4a06-9afe-029be310d36e" file="Dev.yaml" />
+	<flow name="aurthmatic-operationsFlow" doc:id="4cb2f150-1194-46a0-9b42-0911068b7252" >
+		<http:listener doc:name="Listener" doc:id="6c74c072-05a9-4bee-a298-fb4ed60a447b" config-ref="HTTP_Listener_config" path="/aurth"/>
+		<logger level="INFO" doc:name="Logger" doc:id="12ed0e69-9c8b-466d-96ce-d52232223dfd" message="Aurthamatic logger is startrd now"/>
+		<set-variable value="#[attributes.queryParams.num1]" doc:name="num1" doc:id="04e7b148-86ca-4fd3-95dd-13cb8bf0beba" variableName="num1"/>
+		<set-variable value="#[attributes.queryParams.num2]" doc:name="num2" doc:id="1e776717-56b7-46a0-9b15-a8507e73c142" variableName="num2"/>
+		<ee:transform doc:name="Transform Message" doc:id="c06a8ccc-1dc9-49f9-baee-79cc77e5067f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0output application/json
+---
+{
+	"addition": (vars.num1 as Number + vars.num2 as Number),
+	"subtraction": (vars.num1 as Number - vars.num2 as Number),
+	"multiplication": (vars.num1 as Number * vars.num2 as Number),
+	"division": (vars.num1 as Number / vars.num2 as Number)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="65ff18c5-f61c-4ea6-b3bb-141cab64935e" message="aurthmatic logger successfully end now"/>
+	</flow>
+</mule>
