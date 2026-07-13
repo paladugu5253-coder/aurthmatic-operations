@@ -3,7 +3,7 @@ http:
 
 deployment:
   app:
-    runtime: 4.12.1
+    runtime: "4.12.1"
   region: "us-east-2"
-  workers: 1
-  workerType: MICRO
+  workers: "1"
+  workerType: "MICRO"
